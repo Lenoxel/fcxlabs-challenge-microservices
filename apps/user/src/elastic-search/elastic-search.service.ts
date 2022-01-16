@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { User } from '../entities/user.entity';
+import { UserCountResult } from './interfaces/userCountResult.type';
 import { UserSearchBody } from './interfaces/userSearchBody.type';
 import { UserSearchResult } from './interfaces/userSearchResult.type';
 
@@ -8,9 +9,16 @@ import { UserSearchResult } from './interfaces/userSearchResult.type';
 export class ElasticSearchService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async search(text: string, fields: string[]): Promise<UserSearchBody[]> {
+  async search(
+    first: number,
+    size: number,
+    text: string,
+    fields: string[],
+  ): Promise<UserSearchBody[]> {
     const { body } = await this.elasticsearchService.search<UserSearchResult>({
       index: 'users',
+      from: first,
+      size,
       body: {
         query: {
           multi_match: {
@@ -22,6 +30,22 @@ export class ElasticSearchService {
     });
     const hits = body.hits.hits;
     return hits.map((item) => item._source);
+  }
+
+  async count(text: string, fields: string[]): Promise<UserCountResult> {
+    const { body } = await this.elasticsearchService.count<UserCountResult>({
+      index: 'users',
+      body: {
+        query: {
+          multi_match: {
+            query: text,
+            fields,
+          },
+        },
+      },
+    });
+
+    return body;
   }
 
   async index({ id, name, login, cpf, status, birthDate }: User) {

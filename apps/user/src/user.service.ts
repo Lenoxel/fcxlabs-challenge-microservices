@@ -8,9 +8,12 @@ import { DeleteResult } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { RecoverPasswordDto } from './dto/recoverPassword.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { UserChangeResult } from './dto/userChangeResult.dto';
+import { UserResponseDto } from './dto/userResponse.dto';
 import { ElasticSearchService } from './elastic-search/elastic-search.service';
 import { UserSearchBody } from './elastic-search/interfaces/userSearchBody.type';
 import { User } from './entities/user.entity';
+import { UserStatus } from './enums/user-status.enum';
 import { UserRepository } from './repositories/user.repository';
 
 @Injectable()
@@ -21,13 +24,24 @@ export class UserService {
   ) {}
 
   async getUsers(
+    first = 0,
+    size = 0,
     userSearchBody: UserSearchBody = null,
-  ): Promise<User[] | UserSearchBody[]> {
+  ): Promise<UserResponseDto> {
     if (userSearchBody) {
       const { birthDate, createdAt, updatedAt } = userSearchBody;
 
-      if (birthDate || createdAt || updatedAt) {
-        return this.userRepository.findByFilters(userSearchBody);
+      if (birthDate || createdAt || updatedAt || true) {
+        const users = await this.userRepository.findByFilters(
+          userSearchBody,
+          first,
+          size,
+        );
+        const count = await this.userRepository.countByFilters(userSearchBody);
+
+        const userResponseDto = new UserResponseDto(users, count);
+
+        return userResponseDto;
       } else {
         let userSearchBodyList: UserSearchBody[] = [];
 
@@ -38,6 +52,8 @@ export class UserService {
         )) {
           if (attributeValue) {
             const partialSearch = await this.elasticSearchService.search(
+              first,
+              size,
               attributeValue,
               [attributeName],
             );
@@ -51,10 +67,40 @@ export class UserService {
           }
         }
 
-        return userSearchBodyList;
+        const userResponseDto = new UserResponseDto(
+          userSearchBodyList,
+          userSearchBodyList.length,
+        );
+
+        return userResponseDto;
       }
     } else {
-      return this.userRepository.findByFilters(null);
+      // Retorna todos os usuários no elastic search com o status ativo
+      // const users = await this.elasticSearchService.search(
+      //   first,
+      //   size,
+      //   UserStatus.Active,
+      //   ['status'],
+      // );
+
+      // const { count } = await this.elasticSearchService.count(
+      //   UserStatus.Active,
+      //   ['status'],
+      // );
+      // const userResponseDto = new UserResponseDto(users, count);
+      // return userResponseDto;
+
+      // Retorna todos os usuários com o status ativo, de forma paginada
+      const users = await this.userRepository.findByFilters(
+        userSearchBody,
+        first,
+        size,
+      );
+      const count = await this.userRepository.countByFilters(userSearchBody);
+
+      const userResponseDto = new UserResponseDto(users, count);
+
+      return userResponseDto;
     }
   }
 
@@ -164,18 +210,38 @@ export class UserService {
     });
   }
 
-  async deleteUser(id: string): Promise<DeleteResult> {
+  async changeUserStatus(
+    id: string,
+    userStatus: UserStatus,
+  ): Promise<UserChangeResult> {
+    const user = await this.userRepository.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não existe');
+    }
+
     try {
-      const deleteResponse = await this.userRepository.delete(id);
+      const updateUserDto = new UpdateUserDto();
+      updateUserDto.status = userStatus;
 
-      if (!deleteResponse.affected) {
-        throw new NotFoundException('Usuário não encontrado');
-      }
+      await this.userRepository.updateAndSave(user, updateUserDto);
 
-      await this.elasticSearchService.remove(id);
+      const userChangeResult: UserChangeResult = {
+        affected: 1,
+      };
 
-      return deleteResponse;
+      return userChangeResult;
     } catch (err) {
+      throw new InternalServerErrorException(err.sqlMessage || err);
+    }
+  }
+
+  async inactiveUserBulk(): Promise<void> {
+    try {
+      console.log('here');
+      return await this.userRepository.inactiveAllUsers();
+    } catch (err) {
+      console.log(err);
       throw new InternalServerErrorException(err.sqlMessage || err);
     }
   }

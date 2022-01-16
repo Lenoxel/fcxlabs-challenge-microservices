@@ -10,4 +10,6 @@ COPY . .
 
 COPY .env /usr/src/app/.env
 
+COPY .env /usr/share/elasticsearch/data/.env
+
 RUN npm run build

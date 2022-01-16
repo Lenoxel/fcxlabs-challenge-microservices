@@ -7,7 +7,11 @@ import { UserStatus } from '../enums/user-status.enum';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async findByFilters(userSearchBody: UserSearchBody): Promise<User[]> {
+  async findByFilters(
+    userSearchBody: UserSearchBody,
+    first = 0,
+    size = 0,
+  ): Promise<User[]> {
     if (userSearchBody) {
       const {
         name,
@@ -26,28 +30,30 @@ export class UserRepository extends Repository<User> {
 
       if (name) {
         if (firstWhere) {
-          queryBuilder.where('user.name = :name', { name });
+          queryBuilder.where('user.name like :name', { name: `%${name}%` });
           firstWhere = false;
         } else {
-          queryBuilder.andWhere('user.name = :name', { name });
+          queryBuilder.andWhere('user.name like :name', { name: `%${name}%` });
         }
       }
 
       if (login) {
         if (firstWhere) {
-          queryBuilder.where('user.login = :login', { login });
+          queryBuilder.where('user.login like :login', { login: `%${login}%` });
           firstWhere = false;
         } else {
-          queryBuilder.andWhere('user.login = :login', { login });
+          queryBuilder.andWhere('user.login like :login', {
+            login: `%${login}%`,
+          });
         }
       }
 
       if (cpf) {
         if (firstWhere) {
-          queryBuilder.where('user.cpf = :cpf', { cpf });
+          queryBuilder.where('user.cpf like :cpf', { cpf: `%${cpf}%` });
           firstWhere = false;
         } else {
-          queryBuilder.andWhere('user.cpf = :cpf', { cpf });
+          queryBuilder.andWhere('user.cpf like :cpf', { cpf: `%${cpf}%` });
         }
       }
 
@@ -58,19 +64,156 @@ export class UserRepository extends Repository<User> {
         } else {
           queryBuilder.andWhere('user.status = :status', { status });
         }
-      } else {
-        queryBuilder.andWhere('user.status = :status', {
-          status: UserStatus.Active,
-        });
       }
+
+      if (ageRange) {
+        if (firstWhere) {
+          queryBuilder.where('user.ageRange = :ageRange', { ageRange });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.ageRange = :ageRange', { ageRange });
+        }
+      }
+
+      if (birthDate) {
+        if (firstWhere) {
+          queryBuilder.where('user.birthDate = :birthDate', { birthDate });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.birthDate = :birthDate', { birthDate });
+        }
+      }
+
+      if (createdAt) {
+        if (firstWhere) {
+          queryBuilder.where('user.createdAt = :createdAt', { createdAt });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.createdAt = :createdAt', { createdAt });
+        }
+      }
+
+      if (updatedAt) {
+        if (firstWhere) {
+          queryBuilder.where('user.updatedAt = :updatedAt', { updatedAt });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.updatedAt = :updatedAt', { updatedAt });
+        }
+      }
+
+      queryBuilder.skip(first).take(size);
 
       return await queryBuilder.getMany();
     } else {
       return this.createQueryBuilder('user')
-        .where('user.status = :status', {
-          status: UserStatus.Active,
+        .where('user.status != :status', {
+          status: UserStatus.Inactive,
         })
+        .skip(first)
+        .take(size)
         .getMany();
+    }
+  }
+
+  async countByFilters(userSearchBody: UserSearchBody): Promise<number> {
+    if (userSearchBody) {
+      const {
+        name,
+        login,
+        cpf,
+        status,
+        ageRange,
+        birthDate,
+        createdAt,
+        updatedAt,
+      } = userSearchBody;
+
+      const queryBuilder = this.createQueryBuilder('user');
+
+      let firstWhere = true;
+
+      if (name) {
+        if (firstWhere) {
+          queryBuilder.where('user.name like :name', { name: `%${name}%` });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.name like :name', { name: `%${name}%` });
+        }
+      }
+
+      if (login) {
+        if (firstWhere) {
+          queryBuilder.where('user.login like :login', { login: `%${login}%` });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.login like :login', {
+            login: `%${login}%`,
+          });
+        }
+      }
+
+      if (cpf) {
+        if (firstWhere) {
+          queryBuilder.where('user.cpf like :cpf', { cpf: `%${cpf}%` });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.cpf like :cpf', { cpf: `%${cpf}%` });
+        }
+      }
+
+      if (status) {
+        if (firstWhere) {
+          queryBuilder.where('user.status = :status', { status });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.status = :status', { status });
+        }
+      }
+
+      if (ageRange) {
+        if (firstWhere) {
+          queryBuilder.where('user.ageRange = :ageRange', { ageRange });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.ageRange = :ageRange', { ageRange });
+        }
+      }
+
+      if (birthDate) {
+        if (firstWhere) {
+          queryBuilder.where('user.birthDate = :birthDate', { birthDate });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.birthDate = :birthDate', { birthDate });
+        }
+      }
+
+      if (createdAt) {
+        if (firstWhere) {
+          queryBuilder.where('user.createdAt = :createdAt', { createdAt });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.createdAt = :createdAt', { createdAt });
+        }
+      }
+
+      if (updatedAt) {
+        if (firstWhere) {
+          queryBuilder.where('user.updatedAt = :updatedAt', { updatedAt });
+          firstWhere = false;
+        } else {
+          queryBuilder.andWhere('user.updatedAt = :updatedAt', { updatedAt });
+        }
+      }
+
+      return await queryBuilder.getCount();
+    } else {
+      return this.createQueryBuilder('user')
+        .where('user.status != :status', {
+          status: UserStatus.Inactive,
+        })
+        .getCount();
     }
   }
 
@@ -142,5 +285,12 @@ export class UserRepository extends Repository<User> {
   async changePasswordAndSave(user: User, newPassword: string) {
     user.password = newPassword;
     await this.save(user);
+  }
+
+  async inactiveAllUsers() {
+    await this.createQueryBuilder()
+      .update(User)
+      .set({ status: UserStatus.Inactive })
+      .execute();
   }
 }

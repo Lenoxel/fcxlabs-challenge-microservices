@@ -2,7 +2,7 @@ import { AgeScale } from '../../enums/age-scale.enum';
 import { UserStatus } from '../../enums/user-status.enum';
 
 export interface UserSearchBody {
-  id: number;
+  id: string;
   name: string;
   login: string;
   cpf: string;

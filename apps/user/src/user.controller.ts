@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  OnModuleInit,
   Param,
   Post,
   Put,
@@ -14,8 +13,11 @@ import { DeleteResult } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { RecoverPasswordDto } from './dto/recoverPassword.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { UserChangeResult } from './dto/userChangeResult.dto';
+import { UserResponseDto } from './dto/userResponse.dto';
 import { UserSearchBody } from './elastic-search/interfaces/userSearchBody.type';
 import { User } from './entities/user.entity';
+import { UserStatus } from './enums/user-status.enum';
 import { UserService } from './user.service';
 
 @Controller('api/v1/users')
@@ -25,7 +27,7 @@ export class UserController {
   // Serviço que retorna todos os usuários
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getUsers(): Promise<User[] | UserSearchBody[]> {
+  async getUsers(): Promise<UserResponseDto> {
     return await this.userService.getUsers();
   }
 
@@ -34,8 +36,10 @@ export class UserController {
   @Post('byFilters')
   async getUsersByFilters(
     @Body() userSearchBody: UserSearchBody,
-  ): Promise<User[] | UserSearchBody[]> {
-    return await this.userService.getUsers(userSearchBody);
+    @Param('first') first: number,
+    @Param('size') size: number,
+  ): Promise<UserResponseDto> {
+    return await this.userService.getUsers(first, size, userSearchBody);
   }
 
   // Serviço que retorna um usuário pelo seu id
@@ -69,10 +73,20 @@ export class UserController {
     return await this.userService.recoverPassword(recoverPasswordDto);
   }
 
-  // Serviço que exclui um usuário
+  // Serviço que altera o status de um usuário
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  async deleteUser(@Param('id') id: string): Promise<DeleteResult> {
-    return await this.userService.deleteUser(id);
+  @Put(':id/status')
+  async changeUserStatus(
+    @Param('id') id: string,
+    @Body() { status }: { status: UserStatus },
+  ): Promise<UserChangeResult> {
+    return await this.userService.changeUserStatus(id, status);
+  }
+
+  // Serviço que inativa todos os usuários
+  @UseGuards(JwtAuthGuard)
+  @Delete('inactive')
+  async inactiveUserBulk(): Promise<void> {
+    return await this.userService.inactiveUserBulk();
   }
 }
