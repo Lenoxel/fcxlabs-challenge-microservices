@@ -30,7 +30,7 @@ export class User {
   @Column('varchar')
   phoneNumber: string;
 
-  @Column({ unique: true, type: 'varchar' })
+  @Column({ unique: true, type: 'varchar', length: 11 })
   cpf: string;
 
   @Column('date')

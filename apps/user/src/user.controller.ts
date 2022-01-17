@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/auth/src/jwt/jwt-auth.guard';
@@ -36,8 +37,8 @@ export class UserController {
   @Post('byFilters')
   async getUsersByFilters(
     @Body() userSearchBody: UserSearchBody,
-    @Param('first') first: number,
-    @Param('size') size: number,
+    @Query('first') first: number,
+    @Query('size') size: number,
   ): Promise<UserResponseDto> {
     return await this.userService.getUsers(first, size, userSearchBody);
   }

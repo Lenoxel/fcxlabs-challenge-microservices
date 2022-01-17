@@ -76,12 +76,12 @@ export class UserRepository extends Repository<User> {
           firstWhere = false;
         } else {
           if (ageScaleClass.getStart()) {
-            queryBuilder.where('user.birthDate BETWEEN :start AND :end', {
+            queryBuilder.andWhere('user.birthDate BETWEEN :start AND :end', {
               start: ageScaleClass.getStart(),
               end: ageScaleClass.getEnd(),
             });
           } else {
-            queryBuilder.where('user.birthDate < :end', {
+            queryBuilder.andWhere('user.birthDate < :end', {
               end: ageScaleClass.getEnd(),
             });
           }
@@ -109,7 +109,7 @@ export class UserRepository extends Repository<User> {
             });
             firstWhere = false;
           } else {
-            queryBuilder.andWhere('user.createdAt >= :createdAtEndDate', {
+            queryBuilder.andWhere('user.createdAt <= :createdAtEndDate', {
               createdAtEndDate: endOfDay(createdAt.end).toISOString(),
             });
           }
@@ -137,24 +137,31 @@ export class UserRepository extends Repository<User> {
             });
             firstWhere = false;
           } else {
-            queryBuilder.andWhere('user.updatedAt >= :updatedAtEndDate', {
+            queryBuilder.andWhere('user.updatedAt <= :updatedAtEndDate', {
               updatedAtEndDate: endOfDay(updatedAt.end).toISOString(),
             });
           }
         }
       }
 
-      queryBuilder.skip(first).take(size);
+      if (size > 0) {
+        queryBuilder.skip(first).take(size);
+      }
 
       return await queryBuilder.getMany();
     } else {
-      return this.createQueryBuilder('user')
-        .where('user.status != :status', {
+      const queryBuilder = this.createQueryBuilder('user').where(
+        'user.status != :status',
+        {
           status: UserStatus.Inactive,
-        })
-        .skip(first)
-        .take(size)
-        .getMany();
+        },
+      );
+
+      if (size > 0) {
+        queryBuilder.skip(first).take(size);
+      }
+
+      return await queryBuilder.getMany();
     }
   }
 
@@ -221,12 +228,12 @@ export class UserRepository extends Repository<User> {
           firstWhere = false;
         } else {
           if (ageScaleClass.getStart()) {
-            queryBuilder.where('user.birthDate BETWEEN :start AND :end', {
+            queryBuilder.andWhere('user.birthDate BETWEEN :start AND :end', {
               start: ageScaleClass.getStart(),
               end: ageScaleClass.getEnd(),
             });
           } else {
-            queryBuilder.where('user.birthDate < :end', {
+            queryBuilder.andWhere('user.birthDate < :end', {
               end: ageScaleClass.getEnd(),
             });
           }
@@ -254,7 +261,7 @@ export class UserRepository extends Repository<User> {
             });
             firstWhere = false;
           } else {
-            queryBuilder.andWhere('user.createdAt >= :createdAtEndDate', {
+            queryBuilder.andWhere('user.createdAt <= :createdAtEndDate', {
               createdAtEndDate: endOfDay(createdAt.end).toISOString(),
             });
           }
@@ -282,7 +289,7 @@ export class UserRepository extends Repository<User> {
             });
             firstWhere = false;
           } else {
-            queryBuilder.andWhere('user.updatedAt >= :updatedAtEndDate', {
+            queryBuilder.andWhere('user.updatedAt <= :updatedAtEndDate', {
               updatedAtEndDate: endOfDay(updatedAt.end).toISOString(),
             });
           }

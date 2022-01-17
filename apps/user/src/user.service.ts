@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { DeleteResult } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { RecoverPasswordDto } from './dto/recoverPassword.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
@@ -138,7 +137,7 @@ export class UserService {
         where: { login },
       });
 
-      this.elasticSearchService.index(createdUser);
+      // await this.elasticSearchService.index(createdUser);
 
       return createdUser;
     } catch (err) {
