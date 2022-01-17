@@ -4,6 +4,8 @@ import { UpdateUserDto } from '../dto/updateUser.dto';
 import { UserSearchBody } from '../elastic-search/interfaces/userSearchBody.type';
 import { User } from '../entities/user.entity';
 import { UserStatus } from '../enums/user-status.enum';
+import { AgeScaleClass } from '../models/age-scale.model';
+import { startOfDay, endOfDay } from 'date-fns';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -13,16 +15,8 @@ export class UserRepository extends Repository<User> {
     size = 0,
   ): Promise<User[]> {
     if (userSearchBody) {
-      const {
-        name,
-        login,
-        cpf,
-        status,
-        ageRange,
-        birthDate,
-        createdAt,
-        updatedAt,
-      } = userSearchBody;
+      const { name, login, cpf, status, ageScale, createdAt, updatedAt } =
+        userSearchBody;
 
       const queryBuilder = this.createQueryBuilder('user');
 
@@ -66,39 +60,87 @@ export class UserRepository extends Repository<User> {
         }
       }
 
-      if (ageRange) {
+      if (ageScale) {
+        const ageScaleClass = new AgeScaleClass(ageScale);
         if (firstWhere) {
-          queryBuilder.where('user.ageRange = :ageRange', { ageRange });
+          if (ageScaleClass.getStart()) {
+            queryBuilder.where('user.birthDate BETWEEN :start AND :end', {
+              start: ageScaleClass.getStart(),
+              end: ageScaleClass.getEnd(),
+            });
+          } else {
+            queryBuilder.where('user.birthDate < :end', {
+              end: ageScaleClass.getEnd(),
+            });
+          }
           firstWhere = false;
         } else {
-          queryBuilder.andWhere('user.ageRange = :ageRange', { ageRange });
-        }
-      }
-
-      if (birthDate) {
-        if (firstWhere) {
-          queryBuilder.where('user.birthDate = :birthDate', { birthDate });
-          firstWhere = false;
-        } else {
-          queryBuilder.andWhere('user.birthDate = :birthDate', { birthDate });
+          if (ageScaleClass.getStart()) {
+            queryBuilder.where('user.birthDate BETWEEN :start AND :end', {
+              start: ageScaleClass.getStart(),
+              end: ageScaleClass.getEnd(),
+            });
+          } else {
+            queryBuilder.where('user.birthDate < :end', {
+              end: ageScaleClass.getEnd(),
+            });
+          }
         }
       }
 
       if (createdAt) {
-        if (firstWhere) {
-          queryBuilder.where('user.createdAt = :createdAt', { createdAt });
-          firstWhere = false;
-        } else {
-          queryBuilder.andWhere('user.createdAt = :createdAt', { createdAt });
+        if (createdAt.start) {
+          if (firstWhere) {
+            queryBuilder.where('user.createdAt >= :createdAtStartDate', {
+              createdAtStartDate: startOfDay(createdAt.start).toISOString(),
+            });
+            firstWhere = false;
+          } else {
+            queryBuilder.andWhere('user.createdAt >= :createdAtStartDate', {
+              createdAtStartDate: startOfDay(createdAt.start).toISOString(),
+            });
+          }
+        }
+
+        if (createdAt.end) {
+          if (firstWhere) {
+            queryBuilder.where('user.createdAt <= :createdAtEndDate', {
+              createdAtEndDate: endOfDay(createdAt.end).toISOString(),
+            });
+            firstWhere = false;
+          } else {
+            queryBuilder.andWhere('user.createdAt >= :createdAtEndDate', {
+              createdAtEndDate: endOfDay(createdAt.end).toISOString(),
+            });
+          }
         }
       }
 
       if (updatedAt) {
-        if (firstWhere) {
-          queryBuilder.where('user.updatedAt = :updatedAt', { updatedAt });
-          firstWhere = false;
-        } else {
-          queryBuilder.andWhere('user.updatedAt = :updatedAt', { updatedAt });
+        if (updatedAt.start) {
+          if (firstWhere) {
+            queryBuilder.where('user.updatedAt >= :updatedAtStartDate', {
+              updatedAtStartDate: startOfDay(updatedAt.start).toISOString(),
+            });
+            firstWhere = false;
+          } else {
+            queryBuilder.andWhere('user.updatedAt >= :updatedAtStartDate', {
+              updatedAtStartDate: startOfDay(updatedAt.start).toISOString(),
+            });
+          }
+        }
+
+        if (updatedAt.end) {
+          if (firstWhere) {
+            queryBuilder.where('user.updatedAt <= :updatedAtEndDate', {
+              updatedAtEndDate: endOfDay(updatedAt.end).toISOString(),
+            });
+            firstWhere = false;
+          } else {
+            queryBuilder.andWhere('user.updatedAt >= :updatedAtEndDate', {
+              updatedAtEndDate: endOfDay(updatedAt.end).toISOString(),
+            });
+          }
         }
       }
 
@@ -118,16 +160,8 @@ export class UserRepository extends Repository<User> {
 
   async countByFilters(userSearchBody: UserSearchBody): Promise<number> {
     if (userSearchBody) {
-      const {
-        name,
-        login,
-        cpf,
-        status,
-        ageRange,
-        birthDate,
-        createdAt,
-        updatedAt,
-      } = userSearchBody;
+      const { name, login, cpf, status, ageScale, createdAt, updatedAt } =
+        userSearchBody;
 
       const queryBuilder = this.createQueryBuilder('user');
 
@@ -171,39 +205,87 @@ export class UserRepository extends Repository<User> {
         }
       }
 
-      if (ageRange) {
+      if (ageScale) {
+        const ageScaleClass = new AgeScaleClass(ageScale);
         if (firstWhere) {
-          queryBuilder.where('user.ageRange = :ageRange', { ageRange });
+          if (ageScaleClass.getStart()) {
+            queryBuilder.where('user.birthDate BETWEEN :start AND :end', {
+              start: ageScaleClass.getStart(),
+              end: ageScaleClass.getEnd(),
+            });
+          } else {
+            queryBuilder.where('user.birthDate < :end', {
+              end: ageScaleClass.getEnd(),
+            });
+          }
           firstWhere = false;
         } else {
-          queryBuilder.andWhere('user.ageRange = :ageRange', { ageRange });
-        }
-      }
-
-      if (birthDate) {
-        if (firstWhere) {
-          queryBuilder.where('user.birthDate = :birthDate', { birthDate });
-          firstWhere = false;
-        } else {
-          queryBuilder.andWhere('user.birthDate = :birthDate', { birthDate });
+          if (ageScaleClass.getStart()) {
+            queryBuilder.where('user.birthDate BETWEEN :start AND :end', {
+              start: ageScaleClass.getStart(),
+              end: ageScaleClass.getEnd(),
+            });
+          } else {
+            queryBuilder.where('user.birthDate < :end', {
+              end: ageScaleClass.getEnd(),
+            });
+          }
         }
       }
 
       if (createdAt) {
-        if (firstWhere) {
-          queryBuilder.where('user.createdAt = :createdAt', { createdAt });
-          firstWhere = false;
-        } else {
-          queryBuilder.andWhere('user.createdAt = :createdAt', { createdAt });
+        if (createdAt.start) {
+          if (firstWhere) {
+            queryBuilder.where('user.createdAt >= :createdAtStartDate', {
+              createdAtStartDate: startOfDay(createdAt.start).toISOString(),
+            });
+            firstWhere = false;
+          } else {
+            queryBuilder.andWhere('user.createdAt >= :createdAtStartDate', {
+              createdAtStartDate: startOfDay(createdAt.start).toISOString(),
+            });
+          }
+        }
+
+        if (createdAt.end) {
+          if (firstWhere) {
+            queryBuilder.where('user.createdAt <= :createdAtEndDate', {
+              createdAtEndDate: endOfDay(createdAt.end).toISOString(),
+            });
+            firstWhere = false;
+          } else {
+            queryBuilder.andWhere('user.createdAt >= :createdAtEndDate', {
+              createdAtEndDate: endOfDay(createdAt.end).toISOString(),
+            });
+          }
         }
       }
 
       if (updatedAt) {
-        if (firstWhere) {
-          queryBuilder.where('user.updatedAt = :updatedAt', { updatedAt });
-          firstWhere = false;
-        } else {
-          queryBuilder.andWhere('user.updatedAt = :updatedAt', { updatedAt });
+        if (updatedAt.start) {
+          if (firstWhere) {
+            queryBuilder.where('user.updatedAt >= :updatedAtStartDate', {
+              updatedAtStartDate: startOfDay(updatedAt.start).toISOString(),
+            });
+            firstWhere = false;
+          } else {
+            queryBuilder.andWhere('user.updatedAt >= :updatedAtStartDate', {
+              updatedAtStartDate: startOfDay(updatedAt.start).toISOString(),
+            });
+          }
+        }
+
+        if (updatedAt.end) {
+          if (firstWhere) {
+            queryBuilder.where('user.updatedAt <= :updatedAtEndDate', {
+              updatedAtEndDate: endOfDay(updatedAt.end).toISOString(),
+            });
+            firstWhere = false;
+          } else {
+            queryBuilder.andWhere('user.updatedAt >= :updatedAtEndDate', {
+              updatedAtEndDate: endOfDay(updatedAt.end).toISOString(),
+            });
+          }
         }
       }
 

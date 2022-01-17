@@ -16,6 +16,35 @@ Os domínios da aplicação são:
 
 4 - user: Responsável pela criação dos usuários que têm acesso à aplicação, provendo a autenticação na mesma e a autorização na consulta dos demais endpoints.
 
+## Base de Dados
+
+Foi criado um server MySQL 8.0, onde temos o schema "users" e, consequentemente, a tabela "user", que armazena todos os usuários cadastrados no sistema.
+
+Embora todo esse processo tenha sido automatizado, com a criação de um container docker a partir de uma imagem MySQL, e também com ORM (Typeorm) por parte do backend, abaixo segue o script de criação da tabela "user":
+
+```bash
+create table users.user
+(
+    id          varchar(36)                               not null
+        primary key,
+    name        varchar(255)                              not null,
+    login       varchar(255)                              not null,
+    password    varchar(255)                              not null,
+    email       varchar(255)                              not null,
+    phoneNumber varchar(255)                              not null,
+    cpf         varchar(255)                              not null,
+    birthDate   date                                      not null,
+    motherName  varchar(255)                              not null,
+    status      enum ('Ativo', 'Bloqueado', 'Inativo')    not null,
+    createdAt   timestamp    default CURRENT_TIMESTAMP    not null,
+    updatedAt   timestamp(6) default CURRENT_TIMESTAMP(6) not null on update CURRENT_TIMESTAMP(6),
+    constraint IDX_a6235b5ef0939d8deaad755fc8
+        unique (cpf),
+    constraint IDX_e12875dfb3b1d92d7d7c5377e2
+        unique (email)
+);
+```
+
 ## Requisitos para rodar a aplicação
 
 Para rodar o projeto localmente, é necessário utilizar: Docker, Docker-Compose, Node e NPM.

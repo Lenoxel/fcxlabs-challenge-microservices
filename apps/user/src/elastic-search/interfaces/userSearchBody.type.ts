@@ -8,20 +8,12 @@ export interface UserSearchBody {
   cpf: string;
   status: UserStatus;
   ageScale: AgeScale;
-  ageRange?: {
+  createdAt?: {
     start: number;
     end: number;
   };
-  birthDate?: {
-    start: Date;
-    end: Date;
-  };
-  createdAt?: {
-    start: Date;
-    end: Date;
-  };
   updatedAt?: {
-    start: Date;
-    end: Date;
+    start: number;
+    end: number;
   };
 }

@@ -29,14 +29,15 @@ export class UserService {
     userSearchBody: UserSearchBody = null,
   ): Promise<UserResponseDto> {
     if (userSearchBody) {
-      const { birthDate, createdAt, updatedAt } = userSearchBody;
+      const { ageScale, createdAt, updatedAt } = userSearchBody;
 
-      if (birthDate || createdAt || updatedAt || true) {
+      if (ageScale || createdAt || updatedAt || true) {
         const users = await this.userRepository.findByFilters(
           userSearchBody,
           first,
           size,
         );
+
         const count = await this.userRepository.countByFilters(userSearchBody);
 
         const userResponseDto = new UserResponseDto(users, count);
@@ -96,6 +97,7 @@ export class UserService {
         first,
         size,
       );
+
       const count = await this.userRepository.countByFilters(userSearchBody);
 
       const userResponseDto = new UserResponseDto(users, count);
@@ -238,7 +240,6 @@ export class UserService {
 
   async inactiveUserBulk(): Promise<void> {
     try {
-      console.log('here');
       return await this.userRepository.inactiveAllUsers();
     } catch (err) {
       console.log(err);

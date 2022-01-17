@@ -20,7 +20,7 @@ import { AuthModule } from 'apps/auth/src/auth.module';
       username: 'root',
       password: 'root',
       entities: [User],
-      synchronize: true,
+      synchronize: false,
       autoLoadEntities: true,
       dropSchema: false,
       migrationsRun: false,
