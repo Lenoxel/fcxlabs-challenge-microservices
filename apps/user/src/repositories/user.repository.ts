@@ -9,6 +9,7 @@ import { startOfDay, endOfDay } from 'date-fns';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
+  // Busca os usuários, de forma paginada, através dos filtros passados
   async findByFilters(
     userSearchBody: UserSearchBody,
     first = 0,
@@ -165,6 +166,7 @@ export class UserRepository extends Repository<User> {
     }
   }
 
+  // Conta o total de usuários através dos filtros passados
   async countByFilters(userSearchBody: UserSearchBody): Promise<number> {
     if (userSearchBody) {
       const { name, login, cpf, status, ageScale, createdAt, updatedAt } =
@@ -306,6 +308,7 @@ export class UserRepository extends Repository<User> {
     }
   }
 
+  // Verifica se um usuário já existe na base de dados
   async userAlreadyExist(
     cpf: string,
     email: string,
@@ -318,6 +321,7 @@ export class UserRepository extends Repository<User> {
       .getMany();
   }
 
+  // Salva um novo usuário na base de dados
   async createAndSave({
     name,
     login,
@@ -344,6 +348,7 @@ export class UserRepository extends Repository<User> {
     await this.insert(user);
   }
 
+  // Atualiza os dados de um usuário já existente na base de dados
   async updateAndSave(
     user: User,
     {
@@ -371,11 +376,13 @@ export class UserRepository extends Repository<User> {
     await this.save(user);
   }
 
+  // Altera a senha de um usuário (recuperação de senha)
   async changePasswordAndSave(user: User, newPassword: string) {
     user.password = newPassword;
     await this.save(user);
   }
 
+  // Inativa todos os usuários do sistema
   async inactiveAllUsers() {
     await this.createQueryBuilder()
       .update(User)

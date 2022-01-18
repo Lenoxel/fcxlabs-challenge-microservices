@@ -30,50 +30,17 @@ export class UserService {
     if (userSearchBody) {
       const { ageScale, createdAt, updatedAt } = userSearchBody;
 
-      if (ageScale || createdAt || updatedAt || true) {
-        const users = await this.userRepository.findByFilters(
-          userSearchBody,
-          first,
-          size,
-        );
+      const users = await this.userRepository.findByFilters(
+        userSearchBody,
+        first,
+        size,
+      );
 
-        const count = await this.userRepository.countByFilters(userSearchBody);
+      const count = await this.userRepository.countByFilters(userSearchBody);
 
-        const userResponseDto = new UserResponseDto(users, count);
+      const userResponseDto = new UserResponseDto(users, count);
 
-        return userResponseDto;
-      } else {
-        let userSearchBodyList: UserSearchBody[] = [];
-
-        let index = 1;
-
-        for (const [attributeName, attributeValue] of Object.entries(
-          userSearchBody,
-        )) {
-          if (attributeValue) {
-            const partialSearch = await this.elasticSearchService.search(
-              first,
-              size,
-              attributeValue,
-              [attributeName],
-            );
-            userSearchBodyList =
-              index > 1
-                ? partialSearch.filter((item) =>
-                    userSearchBodyList.includes(item),
-                  )
-                : [...partialSearch];
-            index += 1;
-          }
-        }
-
-        const userResponseDto = new UserResponseDto(
-          userSearchBodyList,
-          userSearchBodyList.length,
-        );
-
-        return userResponseDto;
-      }
+      return userResponseDto;
     } else {
       // Retorna todos os usuários no elastic search com o status ativo
       // const users = await this.elasticSearchService.search(

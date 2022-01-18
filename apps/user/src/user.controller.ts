@@ -10,7 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/auth/src/jwt/jwt-auth.guard';
-import { DeleteResult } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { RecoverPasswordDto } from './dto/recoverPassword.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
@@ -24,6 +23,8 @@ import { UserService } from './user.service';
 @Controller('api/v1/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  // A sintaxe "@UseGuards(JwtAuthGuard)" protege os endpoints da api de usuários conforme implementado em na aplicação AuthService, permitindo apenas usuários logados consultarem.
 
   // Serviço que retorna todos os usuários
   @UseGuards(JwtAuthGuard)

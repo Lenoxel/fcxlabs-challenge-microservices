@@ -1,20 +1,30 @@
 # FCxLabs Challenge
-<!-- 
+
 ## Descrição
 
 O projeto foi construído utilizando o framework Nest.js, tomando proveito das libs e built-ins que o mesmo fornece para resolver os desafios propostos e implementar toda a API Restful.
 
-A API Restful foi arquiteturada no modelo de microservices, em um monorepo, com o objetivo de manter a alta performance em cada domínio da aplicação, possibilitando que cada microservice escale individualmente.
+A API Restful foi arquiteturada no modelo de microservices, em um monorepo, com o objetivo de facilitar o gerenciamento das bibliotecas e dos domínios da aplicação, possibilitando que cada microservice escale individualmente e possam ser acessados a partir de um mesmo diretório/repositório.
 
 Os domínios da aplicação são:
 
-1 - auth: Responsável pela autenticação e autorização da aplicação.
+1 - auth: responsável pela autenticação e autorização da aplicação.
 
-2 - client: Responsável pelo gerenciamento e visualização (CRUD) dos clientes.
+2 - user: responsável pela criação dos usuários que têm acesso à aplicação, provendo todos os outros endpoints necessários para atender os requisitos do sistema.
 
-3 - client-product: Responsável por salvar e manter a lista de produtos favoritos de um cliente.
+A estrutura do projeto segue boa parte do que já é sugerido pelo nest.js, visto que é um framework opinativo e já indica o caminho que cada coisa "deve" ficar.
 
-4 - user: Responsável pela criação dos usuários que têm acesso à aplicação, provendo a autenticação na mesma e a autorização na consulta dos demais endpoints.
+Aqui, vale ressaltar os seguintes arquivos e pastas:
+
+1 - main.ts: ponto de partida do projeto, onde o backend feito em nest é inicializado.
+
+2 - controller: recebe as chamadas feitas por http (API, frontend, etc.) e as delega para os respectivos services.
+
+3 - service: cuida das regras de negócio e casos de uso da aplicação.
+
+4 - repository: responsável pela comunicação com o banco de dados através do paradigma de orientação a objetos: design pattern + typeorm.
+
+5 - jwt: pasta da aplicação auth que é responsável por implementar o jwt através das features do próprio nest.js.
 
 ## Base de Dados
 
@@ -53,7 +63,7 @@ Na minha máquina, as versões utilizadas durante o desenvolvimento foram: Docke
 
 ## Instalação e execução da aplicação
 
-Antes de rodar o comando abaixo, certifique-se de deixar as portas que serão utilizadas para servir a aplicação livres: 3000, 3001, 3002, 3003, 3308, 3309 e 27017, sendo todas no domínio localhost.
+Antes de rodar o comando abaixo, certifique-se de deixar livres as portas que serão utilizadas para servir a aplicação: 3000 (users), 3001 (auth) e 33306 (mysql), sendo todas no domínio localhost.
 
 Na pasta raiz do projeto, execute:
 
@@ -64,7 +74,7 @@ $ docker-compose up -d
 
 ## Testar a aplicação
 
-Para fazer as chamadas nos endpoints da aplicação, sugiro a importação do arquivo "luizalabs_challenge.postman_collection.json", que está na pasta raiz do projeto, para dentro do Postman. Esse arquivo contém todas as chamadas possíveis da API, com alguns exemplos já inseridos.
+Para visualizar as chamadas nos endpoints da aplicação, sugiro a importação do arquivo "FCxLabs Challenge.postman_collection.json", que está na pasta raiz do projeto, para dentro do Postman. Esse arquivo contém todas as chamadas possíveis da API, com alguns exemplos já inseridos.
 
 # Sobre o Nest.js
 

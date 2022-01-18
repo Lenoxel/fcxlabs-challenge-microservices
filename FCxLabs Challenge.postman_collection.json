@@ -1,0 +1,254 @@
+{
+	"variables": [],
+	"info": {
+		"name": "FCxLabs Challenge",
+		"_postman_id": "13a51c84-8ac3-341b-b160-77522b2baf7b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"description": "",
+			"item": [
+				{
+					"name": "Get Users",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZjZkODYwOS1hOTg4LTQyYTEtOTYzZi0yNjllOWU4YTUzODUiLCJpYXQiOjE2NDIyMTc1NjB9.aqQDCmvVki-MDlYkUfatpZlMm211RmaDsiTeGz_09CA",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users By Filter",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users/byFilters",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZjZkODYwOS1hOTg4LTQyYTEtOTYzZi0yNjllOWU4YTUzODUiLCJpYXQiOjE2NDIyMTc1NjB9.aqQDCmvVki-MDlYkUfatpZlMm211RmaDsiTeGz_09CA",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"status\": \"\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by id",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users/9f6d8609-a988-42a1-963f-269e9e8a5385",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZjZkODYwOS1hOTg4LTQyYTEtOTYzZi0yNjllOWU4YTUzODUiLCJpYXQiOjE2NDIyMTc1NjB9.aqQDCmvVki-MDlYkUfatpZlMm211RmaDsiTeGz_09CA",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "",
+								"value": "",
+								"description": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Gabriel Lenon\",\n\t\"login\": \"gabriel.lenon\",\n\t\"email\": \"glenonsilva@gmail.com\",\n\t\"password\": \"FcxLabs123\",\n\t\"phoneNumber\": \"+5581986952225\",\n\t\"cpf\": \"11145043437\",\n\t\"birthDate\": \"1997-05-20\",\n\t\"motherName\": \"Ana Cássia\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (outros)",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "",
+								"value": "",
+								"description": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Felipe Alves\",\n\t\"login\": \"felipe.alves\",\n\t\"email\": \"felipe.alves@gmail.com\",\n\t\"password\": \"Teste123\",\n\t\"phoneNumber\": \"+5581985601231\",\n\t\"cpf\": \"1234567859\",\n\t\"birthDate\": \"2000-04-17\",\n\t\"motherName\": \"Alba Queiroz\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users/37183880-ec1a-49f6-bd39-693e0f4758f4",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZjZkODYwOS1hOTg4LTQyYTEtOTYzZi0yNjllOWU4YTUzODUiLCJpYXQiOjE2NDIyMTc1NjB9.aqQDCmvVki-MDlYkUfatpZlMm211RmaDsiTeGz_09CA",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Gabriel Lenon\",\n\t\"login\": \"gabriel.lenon\",\n\t\"email\": \"glenonsilva@gmail.com\",\n\t\"password\": \"FCxLabs1234\",\n\t\"phoneNumber\": \"+5581986952225\",\n\t\"cpf\": \"11145043437\",\n\t\"birthDate\": \"1997-05-20\",\n\t\"motherName\": \"Ana Cássia\",\n\t\"status\": \"Ativo\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Recover Password",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users/password/recover",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZjZkODYwOS1hOTg4LTQyYTEtOTYzZi0yNjllOWU4YTUzODUiLCJpYXQiOjE2NDIyMTc1NjB9.aqQDCmvVki-MDlYkUfatpZlMm211RmaDsiTeGz_09CA",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Gabriel Lenon\",\n\t\"email\": \"glenonsilva@gmail.com\",\n\t\"newPassword\": \"FCxLabs1234\",\n\t\"cpf\": \"11145043437\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Inactive All Users",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users/inactive",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZjZkODYwOS1hOTg4LTQyYTEtOTYzZi0yNjllOWU4YTUzODUiLCJpYXQiOjE2NDIyMTc1NjB9.aqQDCmvVki-MDlYkUfatpZlMm211RmaDsiTeGz_09CA",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"url": "http://localhost:3000/api/v1/users/5c1a52c0-b6b3-43da-88e5-d3019ebff360",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZjZkODYwOS1hOTg4LTQyYTEtOTYzZi0yNjllOWU4YTUzODUiLCJpYXQiOjE2NDIyMTc1NjB9.aqQDCmvVki-MDlYkUfatpZlMm211RmaDsiTeGz_09CA",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"glenonsilva@gmail.com\",\n\t\"password\": \"LuizaLabs4321\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"description": "",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"url": "http://localhost:3001/api/v1/auth/login",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"login\": \"gabriel.lenon\",\n\t\"password\": \"FcxLabs1234\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

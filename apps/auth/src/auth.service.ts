@@ -28,6 +28,7 @@ export class AuthService {
     };
   }
 
+  // Valida se um usuário existe e passou as credenciais corretas no login
   async validateUser(loginUserDto: LoginUserDto): Promise<User> {
     const { login, password } = loginUserDto;
 
